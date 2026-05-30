@@ -61,6 +61,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.5")
+
     // Room
     val roomVersion = "2.6.0"
     implementation("androidx.room:room-runtime:$roomVersion")
@@ -80,6 +83,7 @@ dependencies {
 
     // Location
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     // CameraX
     val cameraxVersion = "1.3.0"
@@ -88,6 +92,9 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
     implementation("androidx.camera:camera-view:$cameraxVersion")
     implementation("androidx.camera:camera-extensions:$cameraxVersion")
+
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-service:2.6.2")
 
     // Network
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
