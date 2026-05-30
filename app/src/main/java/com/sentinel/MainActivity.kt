@@ -35,7 +35,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SentinelNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "dashboard") {
+    NavHost(
+        navController = navController, 
+        startDestination = "dashboard",
+        modifier = Modifier.fillMaxSize()
+    ) {
         composable("onboarding") { /* TODO: Implement OnboardingScreen */ }
         composable("dashboard") { DashboardScreen() }
         composable("settings") { /* TODO: Implement SettingsScreen */ }
