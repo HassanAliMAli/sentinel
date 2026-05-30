@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SentinelApp()
+                    SentinelNavigation()
                 }
             }
         }
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SentinelApp() {
+fun SentinelNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "dashboard") {
         composable("onboarding") { /* TODO: Implement OnboardingScreen */ }
