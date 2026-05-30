@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sentinel.ui.dashboard.DashboardScreen
 import com.sentinel.ui.theme.SentinelTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,7 +37,7 @@ fun SentinelNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "dashboard") {
         composable("onboarding") { /* TODO: Implement OnboardingScreen */ }
-        composable("dashboard") { /* TODO: Implement DashboardScreen */ }
+        composable("dashboard") { DashboardScreen() }
         composable("settings") { /* TODO: Implement SettingsScreen */ }
         composable("logs") { /* TODO: Implement LogViewerScreen */ }
     }
