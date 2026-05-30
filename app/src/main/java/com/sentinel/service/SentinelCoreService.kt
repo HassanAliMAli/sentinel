@@ -3,13 +3,17 @@ package com.sentinel.service
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ServiceLifecycleDispatcher
+import androidx.lifecycle.lifecycleScope
 import com.sentinel.data.local.db.dao.AppConfigDao
 import com.sentinel.data.local.db.dao.TheftLogDao
 import com.sentinel.core.location.LocationTracker
@@ -20,7 +24,6 @@ import javax.inject.Inject
 import android.content.BroadcastReceiver
 import android.telephony.SmsManager
 import android.util.Log
-import androidx.lifecycle.lifecycleScope
 import com.sentinel.core.media.MediaCaptureManager
 import com.sentinel.data.local.db.entities.TheftLog
 import kotlinx.coroutines.delay
@@ -29,7 +32,9 @@ import kotlinx.coroutines.launch
 import com.sentinel.core.sensors.SnatchDetectionManager
 
 @AndroidEntryPoint
-class SentinelCoreService : LifecycleService() {
+class SentinelCoreService : Service(), LifecycleOwner {
+
+    private val dispatcher = ServiceLifecycleDispatcher(this)
 
     @Inject
     lateinit var appConfigDao: AppConfigDao
@@ -59,17 +64,38 @@ class SentinelCoreService : LifecycleService() {
     }
 
     override fun onCreate() {
+        dispatcher.onServicePreSuperOnCreate()
         super.onCreate()
         startForegroundService()
         registerReceiver(commandReceiver, IntentFilter("com.sentinel.COMMAND_TRIGGERED"), Context.RECEIVER_NOT_EXPORTED)
         snatchDetectionManager.startDetection()
     }
 
+    @Suppress("DEPRECATION")
+    override fun onStart(intent: Intent?, startId: Int) {
+        dispatcher.onServicePreSuperOnStart()
+        super.onStart(intent, startId)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
+        return START_STICKY
+    }
+
     override fun onDestroy() {
+        dispatcher.onServicePreSuperOnDestroy()
         super.onDestroy()
         unregisterReceiver(commandReceiver)
         snatchDetectionManager.stopDetection()
     }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        dispatcher.onServicePreSuperOnBind()
+        return null
+    }
+
+    override val lifecycle: Lifecycle
+        get() = dispatcher.lifecycle
 
     private fun handleCommand(command: String, sender: String?, args: List<String>) {
         lifecycleScope.launch {
