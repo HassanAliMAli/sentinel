@@ -3,7 +3,10 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -18,19 +21,19 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.2 # Explicitly set gradle version since wrapper is missing
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease
+        run: gradle assembleRelease
 
       - name: Create Release
-        id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: app/build/outputs/apk/release/app-release-unsigned.apk # For now, using unsigned. We can update to signed once keystore is set.
+          files: app/build/outputs/apk/release/*.apk
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
