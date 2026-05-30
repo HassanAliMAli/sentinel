@@ -22,18 +22,27 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Generate Keystore
+        run: |
+          keytool -genkey -v -keystore app/sentinel-release.keystore -alias sentinel_alias -keyalg RSA -keysize 2048 -validity 10000 -storepass sentinel123 -keypass sentinel123 -dname "CN=Sentinel User, OU=Sentinel, O=Sentinel Open Source, L=Unknown, ST=Unknown, C=Unknown"
+        
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 8.2 # Explicitly set gradle version since wrapper is missing
+          gradle-version: 8.2
 
       - name: Build with Gradle
         run: gradle assembleRelease
+        env:
+          KEYSTORE_PASSWORD: sentinel123
+          KEY_PASSWORD: sentinel123
+          KEY_ALIAS: sentinel_alias
+          KEYSTORE_FILE: sentinel-release.keystore
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: app/build/outputs/apk/release/*.apk
+          files: app/build/outputs/apk/release/*-release.apk
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false

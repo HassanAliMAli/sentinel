@@ -22,9 +22,19 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("KEYSTORE_FILE") ?: "sentinel-release.keystore")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "sentinel123"
+            keyAlias = System.getenv("KEY_ALIAS") ?: "sentinel_alias"
+            keyPassword = System.getenv("KEY_PASSWORD") ?: "sentinel123"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
