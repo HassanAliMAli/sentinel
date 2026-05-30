@@ -1,2 +1,5 @@
-<resources><string name="app_name">Sentinel</string></resources>
-<resources><string name="accessibility_description">Enables Sentinel to protect your device by preventing unauthorized shutdowns.</string></resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sentinel</string>
+    <string name="accessibility_description">Enables Sentinel to protect your device by preventing unauthorized shutdowns.</string>
+</resources>
